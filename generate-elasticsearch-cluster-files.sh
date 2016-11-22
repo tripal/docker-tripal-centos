@@ -1,6 +1,7 @@
 ## /bin/bash
 
 clusterName=$1
+PORT=$2
 
 sudo cp -r /etc/init.d/elasticsearch "/etc/init.d/elasticsearch_"$clusterName
 sed  -i "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \\
