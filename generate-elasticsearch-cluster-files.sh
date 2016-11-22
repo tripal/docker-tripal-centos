@@ -5,6 +5,9 @@ clusterName=$1
 sudo cp -r /etc/init.d/elasticsearch "/etc/init.d/elasticsearch_"$clusterName
 sed  "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \\
 sed  "s|LOG_DIR=\"/var/lib/elasticsearch\"|LOG_DIR=\"/var/lib/elasticsearch_${clusterName}\"|g" "/var/lib/elasticsearch_"$clusterName && \\
+sed  "s|LOG_DIR=\"/etc/elasticsearch\"|LOG_DIR=\"/etc/elasticsearch_${clusterName}\"|g" "/etc/elasticsearch_"$clusterName && \\
+sed  "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_${clusterName}\"|g" "var/log/elasticsearch_"$clusterName && \\
+sed "s|/var/run/elasticsearch|/var/run/elasticsearch|g"
 
 
 
