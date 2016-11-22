@@ -19,3 +19,6 @@ cd "/etc/elasticsearch_"$clustername && \\
   sed "s|^# http\.port\:.*|http\.port\: ${PORT}|g" elasticsearch.yml && chown elasticsearch:elasticsearch elasticsearch.yml
 sudo cp -r /var/log/elasticsearch "/var/log/elasticsearch_"$clusterName && sudo chown -R elasticsearch:elasticsearch "/var/log/elasticsearch_"$clustername
 sudo cp -r /var/run/elasticsearch "/var/run/elasticsearch_"$clusterName && sudo chown -R elasticsearch:elasticsearch "/var/run/elasticsearch_"$clustername
+
+
+"/etc/init.d/elasticsearch_"$clusterName start
