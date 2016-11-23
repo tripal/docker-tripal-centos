@@ -10,8 +10,6 @@ export CLUSTER04=myCluster04
 export PORT01=9204
 export CLUSTER05=myCluster05
 export PORT05=9205
-export PG_USER=postgres
-export $PGDATA=/var/lib/pgsql/data/
 
 sh /start-new-elasticsearch-cluster.sh $CLUSTER01 $PORT01
 sh /start-new-elasticsearch-cluster.sh $CLUSTER02 $PORT02
@@ -19,5 +17,4 @@ sh /start-new-elasticsearch-cluster.sh $CLUSTER03 $PORT03
 sh /start-new-elasticsearch-cluster.sh $CLUSTER04 $PORT04
 sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
 
-su - $PG_USER && initdb -D $PGDATA
 
