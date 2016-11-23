@@ -15,13 +15,14 @@ FROM centos:latest
 # ENV PORT01=9204
 # ENV CLUSTER05=myCluster05
 # ENV PORT05=9205
-
 ADD elasticsearch.repo /etc/yum.repos.d/
 RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch && \
-    yum update -y && yum install -y elasticsearch initscripts sudo which java-1.8.0-openjdk.x86_64
+    yum update -y && yum install -y elasticsearch initscripts sudo which java-1.8.0-openjdk.x86_64 postgresql-server
+
 
 ## Build 5 elasticsearch clusters
 ADD start-new-elasticsearch-cluster.sh /
+ADD entrypoint.sh /
 # RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER01 $PORT01
 # RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER02 $PORT02
 # RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER03 $PORT03
@@ -29,9 +30,7 @@ ADD start-new-elasticsearch-cluster.sh /
 # RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
 
 ## Install postgresql
-ENV $PGDATA=/var/lib/pgsql/data/
-ENV $PG_USER=postgres
-RUN yum install -y postgresql-server
+# RUN yum install -y postgresql-server
 # RUN su - $PG_USER && initdb -D $PGDATA
 
-ENTRYPOINT entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
