@@ -11,10 +11,16 @@ docker run -it mingchen0919/elasticsearch-multi-clusters /bin/bash
 
 ## Start new elasticsearch clusters
 
-The following command lines start three clusters: `myCluster01`, `myCluster02` and `myCluster03` on port `9201`, `9202` and `9203`, respectively.
+```
+/etc/init.d/elasticsearch_myCluster01 start
+/etc/init.d/elasticsearch_myCluster02 start
+/etc/init.d/elasticsearch_myCluster03 start
+/etc/init.d/elasticsearch_myCluster04 start
+/etc/init.d/elasticsearch_myCluster05 start
+```
+
+## Start the postgres server
 
 ```
-/start-new-elasticsearch-cluster.sh myCluster01 9201
-/start-new-elasticsearch-cluster.sh myCluster02 9202
-/start-new-elasticsearch-cluster.sh myCluster03 9203
+sudo -u postgres start -D /var/lib/pgsql/data/
 ```
