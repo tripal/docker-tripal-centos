@@ -20,6 +20,7 @@ ADD elasticsearch.repo /etc/yum.repos.d/
 RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch && \
     yum update -y && yum install -y elasticsearch initscripts sudo which java-1.8.0-openjdk.x86_64
 
+## Build 5 elasticsearch clusters
 ADD start-new-elasticsearch-cluster.sh /
 RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER01 $PORT01
 RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER02 $PORT02
@@ -27,3 +28,7 @@ RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER03 $PORT03
 RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER04 $PORT04
 RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
 
+## Install postgresql
+ENV $PGDATA=/var/lib/pgsql/data/
+ENV $PG_USER=postgres
+RUN yum install -y postgresql-server
