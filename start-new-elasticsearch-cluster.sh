@@ -1,4 +1,4 @@
-## /bin/bash
+#!/bin/bash
 
 clusterName=$1
 PORT=$2
