@@ -14,3 +14,4 @@ ADD start-new-elasticsearch-cluster.sh /
 RUN sh /start-new-elasticsearch-cluster.sh myCluster01 9201 &&
     sh /start-new-elasticsearch-cluster.sh myCluster02 9202 &&
     sh /start-new-elasticsearch-cluster.sh myCluster03 9203
+
