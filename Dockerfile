@@ -4,6 +4,7 @@
 
 FROM centos:latest
 
+## Install elasticsearch
 ENV CLUSTER01=myCluster01
 ENV PORT01=9201
 ENV CLUSTER02=myCluster02
@@ -15,7 +16,6 @@ ENV PORT01=9204
 ENV CLUSTER05=myCluster05
 ENV PORT05=9205
 
-## Install elasticsearch
 ADD elasticsearch.repo /etc/yum.repos.d/
 RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch && \
     yum update -y && yum install -y elasticsearch initscripts sudo which java-1.8.0-openjdk.x86_64
@@ -32,3 +32,4 @@ RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
 ENV $PGDATA=/var/lib/pgsql/data/
 ENV $PG_USER=postgres
 RUN yum install -y postgresql-server
+RUN su - $PG_USER && initdb -D $PGDATA
