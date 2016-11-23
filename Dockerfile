@@ -40,4 +40,3 @@ RUN pg_ctl start -D /var/lib/pgsql/data/
 USER root
 
 
-# ENTRYPOINT ["/entrypoint.sh"]
