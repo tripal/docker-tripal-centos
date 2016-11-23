@@ -6,7 +6,7 @@ Run multiple elasticsearch clusters on a centos machine.
 ## Run an interactive container
 
 ```
-docker run -it mingchen0919/docker-elasticsearch-multiple-cluster:dev01 /bin/bash
+docker run -it mingchen0919/elasticsearch-multi-clusters /bin/bash
 ```
 
 ## Start new elasticsearch clusters
