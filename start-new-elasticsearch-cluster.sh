@@ -14,7 +14,7 @@ sed  -i "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_$
   sed  -i "s|CONF_DIR=\"/etc/elasticsearch\"|CONF_DIR=\"/etc/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
   sed  -i "s|PID_DIR=\"/var/run/elasticsearch\"|LOG_DIR=\"/var/run/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName
 
-cd "/etc/elasticsearch_"$clustername && \
+cd "/etc/elasticsearch_"$clusterName && \
   sed "s|^# cluster\.name\:.*|cluster\.name\: ${clusterName}|g" elasticsearch.yml && \
   sed "s|^# path\.data\:.*|path\.data\: \"/var/lib/elasticsearch_${clusterName}\"|g" elasticsearch.yml && \
   sed "s|^# path\.logs\:.*|path\.logs\: \"/var/log/elasticsearch_${clusterName}\"|g" elasticsearch.yml && \
