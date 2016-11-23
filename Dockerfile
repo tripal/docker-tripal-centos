@@ -13,7 +13,7 @@ ENV PORT03=9203
 ENV CLUSTER04=myCluster04
 ENV PORT01=9204
 ENV CLUSTER05=myCluster05
-ENV PORT05
+ENV PORT05=9205
 
 ## Install elasticsearch
 ADD elasticsearch.repo /etc/yum.repos.d/
