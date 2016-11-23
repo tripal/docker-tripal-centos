@@ -11,7 +11,7 @@ cp -r /var/run/elasticsearch "/var/run/elasticsearch_"$clusterName
 
 sed  -i "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
   sed  -i "s|DATA_DIR=\"/var/lib/elasticsearch\"|DATA_DIR=\"/var/lib/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
-  sed  -i "s|CONFIG_DIR=\"/etc/elasticsearch\"|CONFIG_DIR=\"/etc/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
+  sed  -i "s|CONF_DIR=\"/etc/elasticsearch\"|CONF_DIR=\"/etc/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
   sed  -i "s|PID_DIR=\"/var/run/elasticsearch\"|LOG_DIR=\"/var/run/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName
 
 cp -r /var/lib/elasticsearch "/var/lib/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/lib/elasticsearch_"$clusterName
