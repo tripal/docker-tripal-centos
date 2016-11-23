@@ -4,9 +4,9 @@ clusterName=$1
 PORT=$2
 
 cp -r /etc/init.d/elasticsearch "/etc/init.d/elasticsearch_"$clusterName && \
-cp -r /var/log/elasticsearch "/var/log/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/log/elasticsearch_"$clusterName\
-cp -r /var/lib/elasticsearch "/var/lib/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/lib/elasticsearch_"$clusterName\
-cp -r /etc/elasticsearch "/etc/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/etc/elasticsearch_"$clusterName\
+cp -r /var/log/elasticsearch "/var/log/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/log/elasticsearch_"$clusterName \
+cp -r /var/lib/elasticsearch "/var/lib/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/lib/elasticsearch_"$clusterName \
+cp -r /etc/elasticsearch "/etc/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/etc/elasticsearch_"$clusterName \
 cp -r /var/run/elasticsearch "/var/run/elasticsearch_"$clusterName && chown -R elasticsearch:elasticsearch "/var/run/elasticsearch_"$clusterName
 
 sed  -i "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_${clusterName}\"|g" "/etc/init.d/elasticsearch_"$clusterName && \
