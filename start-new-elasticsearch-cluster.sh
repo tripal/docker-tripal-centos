@@ -22,4 +22,4 @@ sed -i "s|^# network\.host\:.*|network\.host\: localhost|g" elasticsearch.yml
 sed -i "s|^# http\.port\:.*|http\.port\: ${PORT}|g" elasticsearch.yml
 chown elasticsearch:elasticsearch elasticsearch.yml
 
-"/etc/init.d/elasticsearch_"$clusterName start
+sudo -u elasticsearch "/etc/init.d/elasticsearch_"$clusterName start
