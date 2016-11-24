@@ -104,11 +104,11 @@ RUN sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
     && /usr/sbin/httpd && sleep 5 \
     && drush dl ctools views -y \
     && drush en ctools views -y \
-    && drush dl tripal -y \
-    && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch \
+    && cd sites/all/modules && git clone -b 7.x-2.x https://github.com/tripal/tripal.git \
+    && cd /var/www/html && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch \
     && patch -p1 < drupal.pgsql-bytea.27.patch \
     && cd /var/www/html/sites/all/modules/views \
-    && patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-22.patch \
+    && patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-30.patch \
     && drush en tripal_core -y
 
 USER root
