@@ -6,7 +6,7 @@ Run multiple elasticsearch clusters on a centos machine.
 ## Run an interactive container
 
 ```
-docker run -it mingchen0919/elasticsearch-multi-clusters /bin/bash
+docker run -it -p 8080:80 mingchen0919/elasticsearch-multi-clusters /bin/bash
 ```
 
 ## Start new elasticsearch clusters
@@ -23,4 +23,10 @@ docker run -it mingchen0919/elasticsearch-multi-clusters /bin/bash
 
 ```
 sudo -u postgres start -D /var/lib/pgsql/data/
+```
+
+## Start apache
+
+```
+/usr/sbin/httpd
 ```
