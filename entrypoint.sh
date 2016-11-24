@@ -1,20 +1,15 @@
 #!/bin/bash
 
-export CLUSTER01=myCluster01
-export PORT01=9201
-export CLUSTER02=myCluster02
-export PORT02=9202
-export CLUSTER03=myCluster03
-export PORT03=9203
-export CLUSTER04=myCluster04
-export PORT01=9204
-export CLUSTER05=myCluster05
-export PORT05=9205
+## start apache
+/usr/sbin/httpd && sleep 5
 
-sh /start-new-elasticsearch-cluster.sh $CLUSTER01 $PORT01
-sh /start-new-elasticsearch-cluster.sh $CLUSTER02 $PORT02
-sh /start-new-elasticsearch-cluster.sh $CLUSTER03 $PORT03
-sh /start-new-elasticsearch-cluster.sh $CLUSTER04 $PORT04
-sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
+## start postgresql
+sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15
 
+## start three of the five elasticsearch cluster
+/etc/init.d/elasticsearch_myCluster01 start && sleep 3 # port=9201 
+/etc/init.d/elasticsearch_myCluster02 start && sleep 3 # port=9202
+/etc/init.d/elasticsearch_myCluster03 start && sleep 3 # port=9203
 
+## 
+sh -c "$@"

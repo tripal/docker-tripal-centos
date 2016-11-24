@@ -117,4 +117,6 @@ ADD run-servers.sh /run-servers.sh
 EXPOSE 80
 EXPOSE 5432
 
-CMD ["/user/sbin/httpd"]
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
