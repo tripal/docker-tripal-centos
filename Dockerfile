@@ -6,15 +6,11 @@ FROM centos:latest
 
 ## Install elasticsearch
 ENV CLUSTER01=myCluster01
-ENV PORT01=9201
 ENV CLUSTER02=myCluster02
-ENV PORT02=9202
 ENV CLUSTER03=myCluster03
-ENV PORT03=9203
 ENV CLUSTER04=myCluster04
-ENV PORT01=9204
 ENV CLUSTER05=myCluster05
-ENV PORT05=9205
+
 ADD elasticsearch.repo /etc/yum.repos.d/
 RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch \
     && yum update -y \
@@ -46,11 +42,11 @@ RUN yum upgrade -y php* \
 ADD start-new-elasticsearch-cluster.sh /
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER01 $PORT01
-RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER02 $PORT02
-RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER03 $PORT03
-RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER04 $PORT04
-RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER05 $PORT05
+RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER01 9201
+RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER02 9202
+RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER03 9203
+RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER04 9204
+RUN sh /start-new-elasticsearch-cluster.sh $CLUSTER05 9205
 
 ## Install postgresql and create a database
 ENV TRIPAL_PG_USER=tripal
@@ -85,7 +81,7 @@ RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > 
     
 RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
 ADD httpd.conf /etc/httpd/conf/httpd.conf
-ADD add-to-settings.txt /
+ADD add-to-settings.txt /add-to-settings.txt
 WORKDIR /var/www/html
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid \
 	&& sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
