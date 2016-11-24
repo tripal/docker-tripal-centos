@@ -96,6 +96,8 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid \
     --account-name=admin --account-pass=admin -y
 
 ## Install Tripal
+RUN mkdir -p /var/www/html/sites/all/modules/php-scripts/
+ADD php-scripts /var/www/html/sites/all/modules/php-scripts/
 RUN sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
     && /usr/sbin/httpd && sleep 5 \
     && drush dl ctools views -y \
@@ -105,10 +107,25 @@ RUN sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
     && patch -p1 < drupal.pgsql-bytea.27.patch \
     && cd /var/www/html/sites/all/modules/views \
     && patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-30.patch \
-    && drush en tripal_core -y
+    && drush en tripal_core -y \
+    && drush php-script ../php-scripts/install-chado-v-1.3.php \
+    && drush trp-run-jobs --username=admin --root=/var/www/html && sleep 20 \
+    && drush en tripal_views tripal_db tripal_cv tripal_organism tripal_analysis tripal_feature -y
+
 
 USER root
-ADD run-servers.sh /run-servers.sh
+#ADD run-servers.sh /run-servers.sh
+
+## Install chado
+#WORKDIR /var/www/html/sites/all/modules
+#RUN mkdir php-scripts/
+#ADD php-scripts/* ./php-scripts/
+#ENV INSTALL_CHADO_VERSION="php-scripts/install-chado-v-1.3.php"
+##RUN sudo -u postgres pg_ctl restart -D /var/lib/pgsql/data/ && sleep 15 \
+#RUN /usr/sbin/httpd && sleep 5 \
+#    && drush en tripal_core -y \
+#    && cd /var/www/html/sites/all/modules/php-scripts && drush php-script install-chado-v-1.3.php \
+#    && drush en tripal_views tripal_db tripal_cv tripal_organism tripal_analysis tripal_feature -y
 
 EXPOSE 80
 EXPOSE 5432
