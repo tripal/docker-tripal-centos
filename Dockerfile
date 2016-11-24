@@ -84,6 +84,8 @@ RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > 
 #    && pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 && sudo su \
     
 RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
+ADD httpd.conf /etc/httpd/conf/httpd.conf
+ADD add-to-settings.txt /
 WORKDIR /var/www/html
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid \
 	&& sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
@@ -92,9 +94,22 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid \
     && mv drupal*/.htaccess ./ \
     && cp sites/default/default.settings.php sites/default/settings.php \
     && chmod 777 sites/default/settings.php \
+    && cat /add-to-settings.txt >> /var/www/html/sites/default/settings.php && rm -rf /add-to-settings.txt \ 
     && mkdir sites/default/files && chown -R apache:apache sites/default/files/ \
     && yes | drush site-install --site-name="Tripal-V2" --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db \
     --account-name=admin --account-pass=admin -y
+
+## Install Tripal
+RUN sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 15 \
+    && /usr/sbin/httpd && sleep 5 \
+    && drush dl ctools views -y \
+    && drush en ctools views -y \
+    && drush dl tripal -y \
+    && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch \
+    && patch -p1 < drupal.pgsql-bytea.27.patch \
+    && cd /var/www/html/sites/all/modules/views \
+    && patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-22.patch \
+    && drush en tripal_core -y
 
 USER root
 ADD run-servers.sh /run-servers.sh
