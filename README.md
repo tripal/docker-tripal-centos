@@ -1,7 +1,7 @@
 ## `docker-tripal-centos` image
 
 The `docker-tripal-centos` image has Tripal v2 installed on centos system. It
-all runs 5 elasticsearch clusters. The chado v1.3 has been installed and
+also runs 5 elasticsearch clusters. The chado v1.3 has been installed and
 control vocabularies have been loaded. To run a Tripal instance, you just need
 to run the following command:
 
