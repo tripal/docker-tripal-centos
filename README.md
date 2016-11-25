@@ -24,6 +24,39 @@ to the tripal site as an admin user.
 * Postgres database username: tripal
 * Postgres database password: tripal_db_passwd
 
+## Elsticsearch
 
+Use the following command lines to check the status of running elasticsearch
+clusters
+
+```
+curl localhost:9201/_cat/health?v
+curl localhost:9202/_cat/health?v
+curl localhost:9203/_cat/health?v
+```
+
+To start the fourth and fifth elasticsearch clusters
+
+```
+/etc/init.d/elasticsearch_myCluster04 start
+/etc/init.d/elasticsearch_myCluster05 start
+```
+
+## Install Drupal/Tripal modules
+
+```
+cd /var/www/html/sites/all/modules
+
+## install tripal_elasticsearch
+git clone https://github.com/tripal/tripal_elasticsearch.git
+drush en tripal_elasticsearch -y
+
+## install tripal_analysis_expression
+git clone https://github.com/tripal/tripal_analysis_expression.git
+drush en tripal_analysis_expression -y
+
+## install other drupal modules
+drush dl devel -y && drush en devel -y
+```
 
 
