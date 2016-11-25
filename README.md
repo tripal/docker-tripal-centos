@@ -1,32 +1,29 @@
-# docker-elasticsearch-multiple-cluster
+## `docker-tripal-centos` image
 
-Run multiple elasticsearch clusters on a centos machine.
-
-
-## Run an interactive container
-
-```
-docker run -it -p 8080:80 mingchen0919/elasticsearch-multi-clusters /bin/bash
-```
-
-## Start new elasticsearch clusters
+The `docker-tripal-centos` image has Tripal v2 installed on centos system. It
+all runs 5 elasticsearch clusters. The chado v1.3 has been installed and
+control vocabularies have been loaded. To run a Tripal instance, you just need
+to run the following command:
 
 ```
-/etc/init.d/elasticsearch_myCluster01 start
-/etc/init.d/elasticsearch_myCluster02 start
-/etc/init.d/elasticsearch_myCluster03 start
-/etc/init.d/elasticsearch_myCluster04 start
-/etc/init.d/elasticsearch_myCluster05 start
+docker run -it -p 8080:80 mingchen0919/mingchen0919/docker-tripal-centos
+/bin/bash
 ```
 
-## Start the postgres server
+This command will launch an interactive docker container with apache, postgres
+and three elasticsearch clusters running. With this docker image, you can easily 
+set up a tripal site for testing or tripal module development in just a couple
+of minitues. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
+to the tripal site as an admin user.
 
-```
-sudo -u postgres start -D /var/lib/pgsql/data/
-```
+## Account names and passwords
 
-## Start apache
+* Tripal site admin username: admin
+* Tripal site password: admin
+* Postgres database name: tripal_db
+* Postgres database username: tripal
+* Postgres database password: tripal_db_passwd
 
-```
-/usr/sbin/httpd
-```
+
+
+
