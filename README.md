@@ -6,8 +6,7 @@ control vocabularies have been loaded. To run a Tripal instance, you just need
 to run the following command:
 
 ```
-docker run -it -p 8080:80 mingchen0919/mingchen0919/docker-tripal-centos
-/bin/bash
+docker run -it -p 8080:80 mingchen0919/mingchen0919/docker-tripal-centos /bin/bash
 ```
 
 This command will launch an interactive docker container with apache, postgres
