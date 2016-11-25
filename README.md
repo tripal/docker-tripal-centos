@@ -6,7 +6,7 @@ control vocabularies have been loaded. To run a Tripal instance, you just need
 to run the following command:
 
 ```
-docker run -it -p 8080:80 mingchen0919/mingchen0919/docker-tripal-centos /bin/bash
+docker run -it -p 8080:80 mingchen0919/docker-tripal-centos /bin/bash
 ```
 
 This command will launch an interactive docker container with apache, postgres
@@ -58,4 +58,17 @@ drush en tripal_analysis_expression -y
 drush dl devel -y && drush en devel -y
 ```
 
+## Launch the image on cloud (Jetstream as an example)
 
+First, you will need to launch a image and get docker install. For example,
+I launch a centos jetstream image and login to the image.
+
+* Install docker: `sudo yum install -y docker`
+* Start docker engine: `sudo service docker start`
+* Lanuch a tripal site with the *docker-tripal-centos* image
+
+```
+docker run -it -p 8080:80 mingchen0919/docker-tripal-centos /bin/bash
+```
+
+* When the launching process is done, you can go to [http://your.jetstream.image.ip:8080/](http://your.jetstream.image.ip:8080/)
