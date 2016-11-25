@@ -60,7 +60,7 @@ drush dl devel -y && drush en devel -y
 
 ## Launch the image on cloud (Jetstream as an example)
 
-First, you will need to launch a image and get docker install. For example,
+First, you will need to launch a image and get docker installed. For example,
 I launch a centos jetstream image and login to the image.
 
 * Install docker: `sudo yum install -y docker`
