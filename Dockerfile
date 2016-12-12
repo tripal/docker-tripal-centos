@@ -5,12 +5,12 @@
 FROM centos:latest
 
 ENV CLUSTER_NAME=myCluster \
-    MINIMUM_MASTER_NODES=3 \
-    NODE_NAME_01=node_01 \
-    NODE_NAME_02=node_02 \
-    NODE_NAME_03=node_03 \
-    NODE_NAME_04=node_04 \
-    NODE_NAME_05=node_05 
+    MINIMUM_MASTER_NODES=2 \
+    MASTER_NODE_01=master_node_01 \
+    MASTER_NODE_02=master_node_02 \
+    DATA_NODE_01=data_node_01 \
+    DATA_NODE_02=data_node_02 \
+    DATA_NODE_03=data_node_03
 
 ##======== Elasticsearch =================
 ## Includes:
@@ -25,12 +25,13 @@ RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch && \
     yum install -y elasticsearch initscripts sudo which wget java-1.8.0-openjdk.x86_64
 ##========================================
 ##==== Build 5 elasticsearch nodes =======
-ADD add-new-elasticsearch-node.sh /add-new-elasticsearch-node.sh
-RUN sh /add-new-elasticsearch-node.sh ${NODE_NAME_01} 9201 && \
-    sh /add-new-elasticsearch-node.sh ${NODE_NAME_02} 9202 && \
-    sh /add-new-elasticsearch-node.sh ${NODE_NAME_03} 9203 && \
-    sh /add-new-elasticsearch-node.sh ${NODE_NAME_04} 9204 && \
-    sh /add-new-elasticsearch-node.sh ${NODE_NAME_05} 9205
+ADD add-elasticsearch-master-node.sh /add-elasticsearch-master-node.sh
+ADD add-elasticsearch-data-node.sh /add-elasticsearch-data-node.sh
+RUN sh /add-elasticsearch-master-node.sh ${MASTER_NODE_01} 9201 && \
+    sh /add-elasticsearch-master-node.sh ${MASTER_NODE_02} 9202 && \
+    sh /add-elasticsearch-data-node.sh ${DATA_NODE_01} 9203 && \
+    sh /add-elasticsearch-data-node.sh ${DATA_NODE_02} 9204 && \
+    sh /add-elasticsearch-data-node.sh ${DATA_NODE_03} 9205
 ##========================================
 
 
@@ -38,8 +39,7 @@ RUN sh /add-new-elasticsearch-node.sh ${NODE_NAME_01} 9201 && \
 ##======== Apache ========================
 RUN yum -y --setopt=tsflags=nodocs update && \
     yum -y --setopt=tsflags=nodocs install httpd && \
-    yum clean all 
-EXPOSE 80
+    yum clean all
 ##========================================
 
 ##======= Install php5.6 =================
@@ -53,98 +53,97 @@ RUN yum install -y php && \
     rpm -Uvh epel-release-latest-7.noarch.rpm && \
     wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm && \
     rpm -Uvh remi-release-7.rpm
- 
+
 ## Upgrade php from default 5.4 to 5.6
 USER root
 ADD php5.6/remi.repo /etc/yum.repos.d/remi.repo
 RUN yum upgrade -y php* && \
     yum install -y php-gd php-pgsql php-mbstring php-xml php-pecl-json
+##========================================   
+
+
+
+##=========== Postgresql =================
+## Includes:
+##		- install postgresql-server
+##		- initiate database
+##		- create database and database user
 ##========================================
-    
+ENV TRIPAL_PG_USER=tripal \
+     TRIPAL_PG_DB=tripal_db
+RUN yum install -y postgresql-server
+
+USER postgres
+
+RUN initdb --encoding=UTF8 -D /var/lib/pgsql/data/
+ADD postgresql/* /var/lib/pgsql/data/
+RUN pg_ctl start -D /var/lib/pgsql/data/ && sleep 5 && \
+    psql -c "CREATE USER $TRIPAL_PG_USER WITH PASSWORD 'tripal_db_passwd';" && \
+    createdb --encoding=UTF8 $TRIPAL_PG_DB -O $TRIPAL_PG_USER
+##=========================================
 
 
 
-###=========== Postgresql =================
-### Includes:
-###		- install postgresql-server
-###		- initiate database
-###		- create database and database user
-###========================================
-#ENV TRIPAL_PG_USER=tripal \
-#     TRIPAL_PG_DB=tripal_db
-#RUN yum install -y postgresql-server
-#
-#USER postgres
-#
-#RUN initdb --encoding=UTF8 -D /var/lib/pgsql/data/
-#ADD postgresql/* /var/lib/pgsql/data/
-#RUN pg_ctl start -D /var/lib/pgsql/data/ && sleep 5 && \
-#    psql -c "CREATE USER $TRIPAL_PG_USER WITH PASSWORD 'tripal_db_passwd';" && \
-#    createdb --encoding=UTF8 $TRIPAL_PG_DB -O $TRIPAL_PG_USER
-###=========================================
-#
-#
-#
-###========= Drush =========================
-#USER root
-#RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > drush && \
-#    chmod +x drush && \
-#    mv drush /usr/local/bin && \
-#    yes | drush init
-###=========================================
-#
-#
-#
-###========= Drupal ========================
-### Install drupal
-### You must have postgres server running before you can install drupal. Remember that each
-### instruction in a Dockerfile builds a layer (running a container), when the execution of
-### of instruction finish, the intermediate container will be removed. Therefore all the
-### connections will lose. So you have to run any dependent servers within the same layer.
-###=========================================
-#RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
-#ADD apache/httpd.conf /etc/httpd/conf/httpd.conf
-#ADD drupal/settings.php /tmp/settings.php
-#WORKDIR /var/www/html
-#RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
-#	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
-#	drush dl drupal-7.52 -y && \
-#    mv drupal*/* ./ && \
-#    mv drupal*/.htaccess ./ && \
-#    cp /tmp/settings.php sites/default/settings.php && \
-#    chmod 777 sites/default/settings.php && \
-#    mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
-#    yum install sendmail -y && \
-#    yes | drush site-install --site-name="Tripal-V2"  --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db --account-name=admin --account-pass=admin -y 
-###===========================================
-#
-#
-###======== Tripal ===========================
-### Includes:
-###		- start postgresql server
-###		- start apache server
-###		- install tripal
-###		- install chado database
-###		- load OBO ontology
-###===========================================
-#ADD chado_install_and_data_load_scripts /var/www/html/sites/all/modules/chado_install_and_data_load_scripts/
-#RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
-#    sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
-#    /usr/sbin/httpd && sleep 5 && \
-#    drush dl ctools views -y && \
-#    drush en ctools views -y && \
-#    cd sites/all/modules && git clone -b 7.x-2.x https://github.com/tripal/tripal.git && \
-#    cd /var/www/html && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch && \
-#    patch -p1 < drupal.pgsql-bytea.27.patch && \
-#    cd /var/www/html/sites/all/modules/views && \
-#    patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-30.patch && \
-#    drush en tripal_core -y && drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
-#    	drush trp-run-jobs --username=admin --root=/var/www/html && \
-#    drush en tripal_views tripal_db tripal_cv tripal_organism tripal_analysis tripal_feature -y && \
-#    drush php-script ../chado_install_and_data_load_scripts/OBO-loader.php && \
-#    	drush trp-run-jobs --username=admin --root=/var/www/html
-###============================================
-#
+##========= Drush =========================
+USER root
+RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > drush && \
+    chmod +x drush && \
+    mv drush /usr/local/bin && \
+    yes | drush init
+##=========================================
+
+
+
+##========= Drupal ========================
+## Install drupal
+## You must have postgres server running before you can install drupal. Remember that each
+## instruction in a Dockerfile builds a layer (running a container), when the execution of
+## of instruction finish, the intermediate container will be removed. Therefore all the
+## connections will lose. So you have to run any dependent servers within the same layer.
+##=========================================
+RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
+ADD apache/httpd.conf /etc/httpd/conf/httpd.conf
+ADD drupal/settings.php /tmp/settings.php
+WORKDIR /var/www/html
+RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
+	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
+	drush dl drupal-7.52 -y && \
+    mv drupal*/* ./ && \
+    mv drupal*/.htaccess ./ && \
+    cp /tmp/settings.php sites/default/settings.php && \
+    chmod 777 sites/default/settings.php && \
+    mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
+    yum install sendmail -y && \
+    yes | drush site-install --site-name="Tripal-V2"  --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db --account-name=admin --account-pass=admin -y 
+##===========================================
+
+
+##======== Tripal ===========================
+## Includes:
+##		- start postgresql server
+##		- start apache server
+##		- install tripal
+##		- install chado database
+##		- load OBO ontology
+##===========================================
+ADD chado_install_and_data_load_scripts /var/www/html/sites/all/modules/chado_install_and_data_load_scripts/
+RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
+    sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
+    /usr/sbin/httpd && sleep 5 && \
+    drush dl ctools views -y && \
+    drush en ctools views -y && \
+    cd sites/all/modules && git clone -b 7.x-2.x https://github.com/tripal/tripal.git && \
+    cd /var/www/html && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch && \
+    patch -p1 < drupal.pgsql-bytea.27.patch && \
+    cd /var/www/html/sites/all/modules/views && \
+    patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-30.patch && \
+    drush en tripal_core -y && drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
+    	drush trp-run-jobs --username=admin --root=/var/www/html && \
+    drush en tripal_views tripal_db tripal_cv tripal_organism tripal_analysis tripal_feature -y && \
+    drush php-script ../chado_install_and_data_load_scripts/OBO-loader.php && \
+    	drush trp-run-jobs --username=admin --root=/var/www/html
+##============================================
+
 
 
 
