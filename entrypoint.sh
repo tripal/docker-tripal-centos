@@ -12,12 +12,12 @@ sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30
 #/etc/init.d/elasticsearch start && sleep 3
 
 ## start a cluster with three nodes
-/etc/init.d/elasticsearch_cluster-01-node-1 start && sleep 3 # port=9201 
-/etc/init.d/elasticsearch_cluster-01-node-2 start && sleep 3 # port=9202 
-/etc/init.d/elasticsearch_cluster-01-node-3 start && sleep 3 # port=9203 
-/etc/init.d/elasticsearch_cluster-02-node-4 start && sleep 3 # port=9204 
-/etc/init.d/elasticsearch_cluster-02-node-5 start && sleep 3 # port=9205 
-/etc/init.d/elasticsearch_cluster-02-node-6 start && sleep 3 # port=9206 
+/etc/init.d/elasticsearch_cluster-01-node-01 start && sleep 3 # port=9201 
+/etc/init.d/elasticsearch_cluster-01-node-02 start && sleep 3 # port=9202 
+/etc/init.d/elasticsearch_cluster-01-node-03 start && sleep 3 # port=9203 
+/etc/init.d/elasticsearch_cluster-02-node-01 start && sleep 3 # port=9204 
+/etc/init.d/elasticsearch_cluster-02-node-02 start && sleep 3 # port=9205 
+/etc/init.d/elasticsearch_cluster-02-node-03 start && sleep 3 # port=9206 
 
 ## 
 sh -c "$@"
