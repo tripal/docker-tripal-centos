@@ -4,13 +4,6 @@
 
 FROM centos:latest
 
-ENV CLUSTER_NAME=myCluster \
-    MINIMUM_MASTER_NODES=2 \
-    MASTER_NODE_01=master_node_01 \
-    MASTER_NODE_02=master_node_02 \
-    DATA_NODE_01=data_node_01 \
-    DATA_NODE_02=data_node_02 \
-    DATA_NODE_03=data_node_03
 
 ##======== Elasticsearch =================
 ## Includes:
@@ -23,15 +16,6 @@ RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch && \
     yum update -y && \
     yum groupinstall -y "Development tools" && \
     yum install -y elasticsearch initscripts sudo which wget java-1.8.0-openjdk.x86_64
-##========================================
-##==== Build 5 elasticsearch nodes =======
-ADD add-elasticsearch-master-node.sh /add-elasticsearch-master-node.sh
-ADD add-elasticsearch-data-node.sh /add-elasticsearch-data-node.sh
-RUN sh /add-elasticsearch-master-node.sh ${MASTER_NODE_01} 9201 && \
-    sh /add-elasticsearch-master-node.sh ${MASTER_NODE_02} 9202 && \
-    sh /add-elasticsearch-data-node.sh ${DATA_NODE_01} 9203 && \
-    sh /add-elasticsearch-data-node.sh ${DATA_NODE_02} 9204 && \
-    sh /add-elasticsearch-data-node.sh ${DATA_NODE_03} 9205
 ##========================================
 
 
@@ -110,6 +94,7 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 	drush dl drupal-7.52 -y && \
     mv drupal*/* ./ && \
     mv drupal*/.htaccess ./ && \
+    rm -rf drupal-7.52 && \
     cp /tmp/settings.php sites/default/settings.php && \
     chmod 777 sites/default/settings.php && \
     mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
@@ -129,6 +114,7 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 ADD chado_install_and_data_load_scripts /var/www/html/sites/all/modules/chado_install_and_data_load_scripts/
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
+    rm -f /usr/local/apache2/logs/httpd.pid && \
     /usr/sbin/httpd && sleep 5 && \
     drush dl ctools views -y && \
     drush en ctools views -y && \
@@ -146,6 +132,15 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 
 
 
+##==== Build two elasticsearch clusters, each has three nodes =======
+ADD add-elasticsearch-instance.sh /add-elasticsearch-instance.sh
+RUN sh /add-elasticsearch-instance my-cluster-01 my-node-01 9201 2 && \
+    sh /add-elasticsearch-instance my-cluster-01 my-node-02 9202 2 && \
+    sh /add-elasticsearch-instance my-cluster-01 my-node-03 9203 2 && \
+    sh /add-elasticsearch-instance my-cluster-02 my-node-01 9204 2 && \
+    sh /add-elasticsearch-instance my-cluster-02 my-node-02 9205 2 && \
+    sh /add-elasticsearch-instance my-cluster-02 my-node-03 9206 2
+##========================================
 
 
 
