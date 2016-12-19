@@ -131,17 +131,19 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 ##============================================
 
 
+##=== Install some linux tools ====================================
+RUN sudo yum install vim cronie htop iotop -y 
+##=================================================================
 
-##==== Build two elasticsearch clusters, each has three nodes =======
+
+
+##==== Build two elasticsearch clusters, each has two nodes =======
 ADD add-elasticsearch-instance.sh /add-elasticsearch-instance.sh
 RUN sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-01 9201 2 && \
     sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-02 9202 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-03 9203 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-01 9204 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-02 9205 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-03 9206 2
+    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-01 9203 2 && \
+    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-02 9204 2
 ##========================================
-
 
 
 

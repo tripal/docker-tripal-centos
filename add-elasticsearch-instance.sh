@@ -21,6 +21,7 @@ sed  -i "s|LOG_DIR=\"/var/log/elasticsearch\"|LOG_DIR=\"/var/log/elasticsearch_$
 sed  -i "s|DATA_DIR=\"/var/lib/elasticsearch\"|DATA_DIR=\"/var/lib/elasticsearch_${NODE_NAME}\"|g" "/etc/init.d/elasticsearch_${NODE_NAME}"
 sed  -i "s|CONF_DIR=\"/etc/elasticsearch\"|CONF_DIR=\"/etc/elasticsearch_${NODE_NAME}\"|g" "/etc/init.d/elasticsearch_${NODE_NAME}"
 sed  -i "s|PID_DIR=\"/var/run/elasticsearch\"|PID_DIR=\"/var/run/elasticsearch_${NODE_NAME}\"|g" "/etc/init.d/elasticsearch_${NODE_NAME}"
+sed  -i "s|export ES_HEAP_SIZE|export ES_HEAP_SIZE=256m|g"  "/etc/init.d/elasticsearch_${NODE_NAME}"
 
 
 cd /etc/elasticsearch_"${NODE_NAME}"
