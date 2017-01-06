@@ -147,7 +147,7 @@ RUN sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-01 9201 2 &&
 
 
 
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 5432
 
 ADD entrypoint.sh /entrypoint.sh

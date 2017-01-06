@@ -6,7 +6,9 @@ rm -f /usr/local/apache2/logs/httpd.pid
 
 ## start postgresql
 rm -rf /var/lib/pgsql/data/postmaster.pid
-sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30
+sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/
+echo "starting database ..."
+sleep 60
 
 ## start the default elasticsearch cluster
 #/etc/init.d/elasticsearch start && sleep 3
