@@ -15,6 +15,13 @@ set up a tripal site for testing or tripal module development in just a couple
 of minitues. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
 to the tripal site as an admin user.
 
+
+```
+docker run -it -p 8080:80 \
+  -v /Users/mingchen/projects/docker-volume-tripal-modules:/var/www/html/sites/all/modules/custom \
+  mingchen0919/docker-tripal-centos:docker-volumn-modules /bin/bash
+```
+
 ## Account names and passwords
 
 * Tripal site admin username: admin

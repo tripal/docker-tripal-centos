@@ -146,6 +146,8 @@ RUN sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-01 9201 2 &&
 ##========================================
 
 
+RUN mkdir -p /var/www/html/sites/all/modules/custom
+VOLUME ["/var/www/html/sites/all/modules/custom"]
 
 EXPOSE 8080
 EXPOSE 5432
