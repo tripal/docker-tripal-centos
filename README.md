@@ -15,6 +15,12 @@ set up a tripal site for testing or tripal module development in just a couple
 of minitues. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
 to the tripal site as an admin user.
 
+## Mount a local directory for custom modules
+
+If you mount a local directory to the custom module directory in your docker container,
+you will be able to edit files on your local machine. And any changes will be reflected
+on your container. A big advantage is that you can use your local editor (for instance, phpstorm) 
+to open and edit files.
 
 ```
 docker run -it -p 8080:80 \
