@@ -25,7 +25,7 @@ to open and edit files.
 ```
 docker run -it -p 8080:80 \
   -v /Users/mingchen/projects/docker-volume-tripal-modules:/var/www/html/sites/all/modules/custom \
-  mingchen0919/docker-tripal-centos:docker-volumn-modules /bin/bash
+  mingchen0919/docker-tripal-centos /bin/bash
 ```
 
 ## Account names and passwords
