@@ -24,7 +24,7 @@ to open and edit files.
 
 ```
 docker run -it -p 8080:80 \
-  -v /Users/mingchen/projects/docker-volume-tripal-modules:/var/www/html/sites/all/modules/custom \
+  -v /Users/mingchen/google_drive/projects/docker-volume-tripal-modules/tripal_elasticsearch:/var/www/html/sites/all/modules/tripal_elasticsearch \
   mingchen0919/docker-tripal-centos /bin/bash
 ```
 
