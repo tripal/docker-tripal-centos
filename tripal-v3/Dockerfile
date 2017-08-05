@@ -130,19 +130,17 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     patch -p1 < ../tripal/tripal_chado_views/views-sql-compliant-three-tier-naming-1971160-30.patch && \
     drush en tripal -y && \
     drush en tripal_chado -y && \
-    drush en tripal_ds tripal_ws -y
-#    drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
-#    	drush trp-run-jobs --username=admin --root=/var/www/html && \
-#    drush php-script ../chado_install_and_data_load_scripts/OBO-loader.php && \
-#    	drush trp-run-jobs --username=admin --root=/var/www/html
+    drush en tripal_ds tripal_ws -y && \
+    drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
+    	drush trp-run-jobs --username=admin --root=/var/www/html && \
+    drush php-script ../chado_install_and_data_load_scripts/prepare-tripal-site.php && \
+        drush trp-run-jobs --username=admin --root=/var/www/html
 ##============================================
 
 
 ##=== Install some linux tools ====================================
 RUN sudo yum install vim cronie htop iotop -y
 ##=================================================================
-
-
 
 ##==== Build two elasticsearch clusters, each has two nodes =======
 ADD add-elasticsearch-instance.sh /add-elasticsearch-instance.sh
