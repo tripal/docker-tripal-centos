@@ -95,12 +95,11 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     mv drupal*/* ./ && \
     mv drupal*/.htaccess ./ && \
     rm -rf drupal-7.56 && \
+    cp /tmp/settings.php sites/default/settings.php && \
     chmod 777 sites/default/settings.php && \
     mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
     yum install sendmail -y && \
-    yes | drush site-install --site-name="Tripal-V3"  --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db --account-name=admin --account-pass=admin -y && \
-    cp /tmp/settings.php sites/default/settings.php && \
-    chmod 555 sites/default/settings.php && \
+    yes | drush site-install --site-name="Tripal-V3"  --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db --account-name=admin --account-pass=admin -y
 ##===========================================
 
 
@@ -113,6 +112,7 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 ##		- load OBO ontology
 ##===========================================
 ADD chado_install_and_data_load_scripts /var/www/html/sites/all/modules/chado_install_and_data_load_scripts/
+WORKDIR /var/www/html
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 60 && \
     rm -f /usr/local/apache2/logs/httpd.pid && \
@@ -127,20 +127,19 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     cd /var/www/html && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch && \
     patch -p1 < drupal.pgsql-bytea.27.patch && \
     cd /var/www/html/sites/all/modules/views && \
-    patch -p1 < ../tripal/tripal_chado_views/views-sql-compliant-three-tier-naming-1971160-22.patch && \
+    patch -p1 < ../tripal/tripal_chado_views/views-sql-compliant-three-tier-naming-1971160-30.patch && \
     drush en tripal -y && \
     drush en tripal_chado -y && \
-    drush en tripal_ds tripal_ws -y && \
-    drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
-    	drush trp-run-jobs --username=admin --root=/var/www/html && \
-    drush en tripal_ds tripal_ws -y 
-    #drush php-script ../chado_install_and_data_load_scripts/OBO-loader.php && \
-    #	drush trp-run-jobs --username=admin --root=/var/www/html
+    drush en tripal_ds tripal_ws -y
+#    drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
+#    	drush trp-run-jobs --username=admin --root=/var/www/html && \
+#    drush php-script ../chado_install_and_data_load_scripts/OBO-loader.php && \
+#    	drush trp-run-jobs --username=admin --root=/var/www/html
 ##============================================
 
 
 ##=== Install some linux tools ====================================
-RUN sudo yum install vim cronie htop iotop -y 
+RUN sudo yum install vim cronie htop iotop -y
 ##=================================================================
 
 
@@ -148,7 +147,7 @@ RUN sudo yum install vim cronie htop iotop -y
 ##==== Build two elasticsearch clusters, each has two nodes =======
 ADD add-elasticsearch-instance.sh /add-elasticsearch-instance.sh
 RUN sh /add-elasticsearch-instance.sh my-cluster node-01 9201 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster node-02 9202 2 && \
+    sh /add-elasticsearch-instance.sh my-cluster node-02 9202 2
 ##========================================
 
 

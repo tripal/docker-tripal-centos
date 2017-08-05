@@ -1,12 +1,12 @@
 ## `docker-tripal-centos` image
 
-The `docker-tripal-centos` image has Tripal v2 installed on centos system. It
-also runs 5 elasticsearch clusters. The chado v1.3 has been installed and
+The `docker-tripal-centos` image has Tripal v3 installed on centos system. It
+also runs an elasticsearch cluster. The chado v1.3 has been installed and
 control vocabularies have been loaded. To run a Tripal instance, you just need
 to run the following command:
 
 ```
-docker run -it -p 8080:80 mingchen0919/docker-tripal-centos /bin/bash
+docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
 This command will launch an interactive docker container with apache, postgres
@@ -44,7 +44,6 @@ clusters
 ```
 curl localhost:9201/_cat/health?v
 curl localhost:9202/_cat/health?v
-curl localhost:9203/_cat/health?v
 ```
 
 To start the fourth and fifth elasticsearch clusters
