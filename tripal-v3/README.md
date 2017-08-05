@@ -1,8 +1,8 @@
-## `docker-tripal-centos` image
+## `docker-tripal-v3` image
 
-The `docker-tripal-centos` image has Tripal v3 installed on centos system. It
-also runs an elasticsearch cluster. The chado v1.3 has been installed and
-control vocabularies have been loaded. To run a Tripal instance, you just need
+The `docker-tripal-v3` image has Tripal v3 installed on centos system. It
+also runs an Elasticsearch cluster. The chado v1.3 has been installed and
+site preparation step executed. To run a Tripal instance, you just need
 to run the following command:
 
 ```
@@ -10,9 +10,9 @@ docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
 This command will launch an interactive docker container with apache, postgres
-and three elasticsearch clusters running. With this docker image, you can easily 
-set up a tripal site for testing or tripal module development in just a couple
-of minitues. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
+and an Elasticsearch cluster running. With this docker image, you can easily 
+set up a tripal 3 site for testing or tripal module development in just a couple
+of minutes. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
 to the tripal site as an admin user.
 
 ## Mount a local directory for custom modules
@@ -24,8 +24,8 @@ to open and edit files.
 
 ```
 docker run -it -p 8080:80 \
-  -v /Users/mingchen/google_drive/projects/docker-volume-tripal-modules/tripal_elasticsearch:/var/www/html/sites/all/modules/tripal_elasticsearch \
-  mingchen0919/docker-tripal-centos /bin/bash
+  -v /Users/mingchen/google_drive/projects/docker-volume-tripal-modules/tripal_Elasticsearch:/var/www/html/sites/all/modules/tripal_Elasticsearch \
+  mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
 ## Account names and passwords
@@ -38,7 +38,7 @@ docker run -it -p 8080:80 \
 
 ## Elsticsearch
 
-Use the following command lines to check the status of running elasticsearch
+Use the following command lines to check the status of running Elasticsearch
 clusters
 
 ```
@@ -46,21 +46,14 @@ curl localhost:9201/_cat/health?v
 curl localhost:9202/_cat/health?v
 ```
 
-To start the fourth and fifth elasticsearch clusters
-
-```
-/etc/init.d/elasticsearch_myCluster04 start
-/etc/init.d/elasticsearch_myCluster05 start
-```
-
 ## Install Drupal/Tripal modules
 
 ```
 cd /var/www/html/sites/all/modules
 
-## install tripal_elasticsearch
-git clone https://github.com/tripal/tripal_elasticsearch.git
-drush en tripal_elasticsearch -y
+## install tripal_Elasticsearch
+git clone https://github.com/tripal/tripal_Elasticsearch.git
+drush en tripal_Elasticsearch -y
 
 ## install tripal_analysis_expression
 git clone https://github.com/tripal/tripal_analysis_expression.git
@@ -77,10 +70,10 @@ I launch a centos jetstream image and login to the image.
 
 * Install docker: `sudo yum install -y docker`
 * Start docker engine: `sudo service docker start`
-* Lanuch a tripal site with the *docker-tripal-centos* image
+* Lanuch a tripal site with the *docker-tripal-v3* image
 
 ```
-docker run -it -p 8080:80 mingchen0919/docker-tripal-centos /bin/bash
+docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
 * When the launching process is done, you can go to [http://your.jetstream.image.ip:8080/](http://your.jetstream.image.ip:8080/)
