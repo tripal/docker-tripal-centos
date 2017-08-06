@@ -148,11 +148,6 @@ RUN sh /add-elasticsearch-instance.sh my-cluster node-01 9201 2 && \
     sh /add-elasticsearch-instance.sh my-cluster node-02 9202 2
 ##========================================
 
-
-RUN mkdir -p /var/www/html/sites/all/modules/custom
-VOLUME ["/var/www/html/sites/all/modules/custom"]
-
-EXPOSE 8080
 EXPOSE 5432
 
 ADD entrypoint.sh /entrypoint.sh

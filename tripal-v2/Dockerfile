@@ -91,10 +91,10 @@ ADD drupal/settings.php /tmp/settings.php
 WORKDIR /var/www/html
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
-	drush dl drupal-7.52 -y && \
+	drush dl drupal-7.56 -y && \
     mv drupal*/* ./ && \
     mv drupal*/.htaccess ./ && \
-    rm -rf drupal-7.52 && \
+    rm -rf drupal-7.56 && \
     cp /tmp/settings.php sites/default/settings.php && \
     chmod 777 sites/default/settings.php && \
     mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
@@ -135,21 +135,12 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 RUN sudo yum install vim cronie htop iotop -y 
 ##=================================================================
 
-
-
 ##==== Build two elasticsearch clusters, each has two nodes =======
 ADD add-elasticsearch-instance.sh /add-elasticsearch-instance.sh
-RUN sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-01 9201 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-01 cluster-01-node-02 9202 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-01 9203 2 && \
-    sh /add-elasticsearch-instance.sh my-cluster-02 cluster-02-node-02 9204 2
+RUN sh /add-elasticsearch-instance.sh my-cluster node-01 9201 2 && \
+    sh /add-elasticsearch-instance.sh my-cluster node-02 9202 2
 ##========================================
 
-
-RUN mkdir -p /var/www/html/sites/all/modules/custom
-VOLUME ["/var/www/html/sites/all/modules/custom"]
-
-EXPOSE 8080
 EXPOSE 5432
 
 ADD entrypoint.sh /entrypoint.sh
