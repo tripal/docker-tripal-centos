@@ -137,6 +137,17 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
         drush trp-run-jobs --username=admin --root=/var/www/html
 ##============================================
 
+##=== Edit settings.php file =================
+RUN chmod 777 sites/default/settings.php && \
+    echo "\$conf['drupal_http_request_fails'] = FALSE;" >> sites/default/settings.php && \
+    echo "\$conf['theme_debug'] = TRUE;" >> sites/default/settings.php && \
+    echo "error_reporting(-1);" >> sites/default/settings.php && \
+    echo "\$conf['error_level'] = 2;" >> sites/default/settings.php && \
+    echo "ini_set('display_errors', TRUE);" >> sites/default/settings.php && \
+    echo "ini_set('display_startup_errors', TRUE);" >> sites/default/settings.php && \
+    chmod 555 sites/default/settings.php
+##============================================
+
 
 ##=== Install some linux tools ====================================
 RUN sudo yum install vim cronie htop iotop -y
