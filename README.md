@@ -33,3 +33,11 @@ docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 * Postgres database name: `tripal_db`
 * Postgres database username: `tripal`
 * Postgres database password: `tripal_db_passwd`
+
+## Restart httpd
+
+Sometimes when you stop the docker container and then restart it, the httpd may stop working. To restart httpd, run the following command within the container:
+
+```
+/usr/sbin/httpd
+```
