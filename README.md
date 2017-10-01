@@ -17,6 +17,13 @@ The command line below will launch an interactive docker container with a Tripal
 docker run -it -p 8080:80 mingchen0919/docker-tripal-v2 /bin/bash
 ```
 
+## Account names and passwords for Tripal 2 site
+
+* Tripal site admin username: `admin`
+* Tripal site password: `admin`
+* Postgres database name: `tripal_db`
+* Postgres database username: `tripal`
+* Postgres database password: `tripal_db_passwd`
 
 ## Launch a Tripal 3 site
 
@@ -26,10 +33,10 @@ The command line below will launch an interactive docker container with a Tripal
 docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
-## Account names and passwords
+## Account names and passwords for Tripal 3 site
 
 * Tripal site admin username: `admin`
-* Tripal site password: `admin`
+* Tripal site password: `P@55w0rd`
 * Postgres database name: `tripal_db`
 * Postgres database username: `tripal`
 * Postgres database password: `tripal_db_passwd`
