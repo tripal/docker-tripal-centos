@@ -87,7 +87,6 @@ RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > 
 ##=========================================
 RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
 ADD apache/httpd.conf /etc/httpd/conf/httpd.conf
-ADD drupal/settings.php /tmp/settings.php
 WORKDIR /var/www/html
 RUN git clone https://github.com/tripal/tripal_install.git && \
     mv tripal_install/* ./
