@@ -6,12 +6,12 @@ site preparation step executed. To run a Tripal instance, you just need
 to run the following command:
 
 ```
-docker run -it -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
+docker run -it --rm -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
 ```
 
 This command will launch an interactive docker container with apache, postgres
 and an Elasticsearch cluster running. With this docker image, you can easily 
-set up a tripal 3 site for testing or tripal module development in just a couple
+set up a tripal 3 site for testing or tripal module development in a couple
 of minutes. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
 to the tripal site as an admin user.
 
@@ -31,7 +31,7 @@ docker run -it -p 8080:80 \
 ## Account names and passwords
 
 * Tripal site admin username: admin
-* Tripal site password: admin
+* Tripal site password: P@55w0rd
 * Postgres database name: tripal_db
 * Postgres database username: tripal
 * Postgres database password: tripal_db_passwd
