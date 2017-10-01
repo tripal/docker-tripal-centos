@@ -78,7 +78,7 @@ RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > 
 
 
 
-##========= Drupal ========================
+##========= Drupal and Tripal ========================
 ## Install drupal
 ## You must have postgres server running before you can install drupal. Remember that each
 ## instruction in a Dockerfile builds a layer (running a container), when the execution of
@@ -89,64 +89,24 @@ RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoe
 ADD apache/httpd.conf /etc/httpd/conf/httpd.conf
 ADD drupal/settings.php /tmp/settings.php
 WORKDIR /var/www/html
+RUN git clone https://github.com/tripal/tripal_install.git && \
+    mv tripal_install/* ./
+RUN sed -i 's/.*Name of the site.*/\$site_name = "Tripal V3";/g' tripal_install.drush.inc && \
+    sed -i 's/.*Admin email for the site.*/\$site_email = "admin@gmail.com";/g' tripal_install.drush.inc && \
+    sed -i 's/.*Name for your admin user on the site.*/\$username = "admin";/g' tripal_install.drush.inc && \
+    sed -i 's/.*Password for the admin user.*/\$user_password = "P@55w0rd";/g' tripal_install.drush.inc && \
+    sed -i 's/.*site_settings.*Is this information correct.*/\$site_settings = TRUE;/g' tripal_install.drush.inc && \
+    sed -i 's/.*database name.*/\$database = "tripal_db";/g' tripal_install.drush.inc && \
+    sed -i 's/.*postgres username.*/\$postgres_username = "tripal";/g' tripal_install.drush.inc && \
+    sed -i 's/.*postgres password.*/\$postgres_password = "tripal_db_passwd";/g' tripal_install.drush.inc && \
+    sed -i 's/.*like localhost.*/\$host = "127.0.0.1";/g' tripal_install.drush.inc && \
+    sed -i 's/.*settings_php.*Is this information correct.*/\$settings_php = TRUE;/g' tripal_install.drush.inc && \
+    sed -i 's/.*Which version of Chado would you like installed.*/\$version = "Install Chado v1.3";/g' tripal_install.drush.inc
 RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
-	drush dl drupal-7.56 -y && \
-    mv drupal*/* ./ && \
-    mv drupal*/.htaccess ./ && \
-    rm -rf drupal-7.56 && \
-    cp /tmp/settings.php sites/default/settings.php && \
-    chmod 777 sites/default/settings.php && \
-    mkdir sites/default/files && chown -R apache:apache sites/default/files/ && \
-    yum install sendmail -y && \
-    yes | drush site-install --site-name="Tripal-V3"  --db-url=pgsql://tripal:tripal_db_passwd@localhost/tripal_db --account-name=admin --account-pass=admin -y
-##===========================================
-
-
-##======== Tripal ===========================
-## Includes:
-##		- start postgresql server
-##		- start apache server
-##		- install tripal
-##		- install chado database
-##		- load OBO ontology
-##===========================================
-ADD chado_install_and_data_load_scripts /var/www/html/sites/all/modules/chado_install_and_data_load_scripts/
-WORKDIR /var/www/html
-RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
-    sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 60 && \
-    rm -f /usr/local/apache2/logs/httpd.pid && \
-    /usr/sbin/httpd && sleep 5 && \
-    drush dl entity -y && \
-    drush en entity -y && \
-    drush dl ctools views -y && \
-    drush en ctools views views_ui -y && \
-    drush dl date ds field_group field_group_table field_formatter_class field_formatter_settings -y && \
-    drush en date ds field_group field_group_table field_formatter_class field_formatter_settings -y && \
-    cd sites/all/modules && git clone -b 7.x-3.x https://github.com/tripal/tripal.git && \
-    cd /var/www/html && wget --no-check-certificate https://drupal.org/files/drupal.pgsql-bytea.27.patch && \
-    patch -p1 < drupal.pgsql-bytea.27.patch && \
-    cd /var/www/html/sites/all/modules/views && \
-    patch -p1 < ../tripal/tripal_chado_views/views-sql-compliant-three-tier-naming-1971160-30.patch && \
-    drush en tripal -y && \
-    drush en tripal_chado -y && \
-    drush en tripal_ds tripal_ws -y && \
-    drush php-script ../chado_install_and_data_load_scripts/install-chado-v-1.3.php && \
-    	drush trp-run-jobs --username=admin --root=/var/www/html && \
-    drush php-script ../chado_install_and_data_load_scripts/prepare-tripal-site.php && \
-        drush trp-run-jobs --username=admin --root=/var/www/html
-##============================================
-
-##=== Edit settings.php file =================
-RUN chmod 777 sites/default/settings.php && \
-    echo "\$conf['drupal_http_request_fails'] = FALSE;" >> sites/default/settings.php && \
-    echo "\$conf['theme_debug'] = TRUE;" >> sites/default/settings.php && \
-    echo "error_reporting(-1);" >> sites/default/settings.php && \
-    echo "\$conf['error_level'] = 2;" >> sites/default/settings.php && \
-    echo "ini_set('display_errors', TRUE);" >> sites/default/settings.php && \
-    echo "ini_set('display_startup_errors', TRUE);" >> sites/default/settings.php && \
-    chmod 555 sites/default/settings.php
-##============================================
+    drush --include=. tripal-generic-install && \
+    drush en -y devel admin_menu && \
+    drush dis -y toolbar
 
 
 ##=== Install some linux tools ====================================
