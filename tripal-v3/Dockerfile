@@ -106,6 +106,7 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
     drush --include=. tripal-generic-install && \
     drush en -y devel admin_menu && \
     drush dis -y toolbar
+RUN chown -R apache:apache /var/www/html/sites/default/files
 
 
 ##=== Install some linux tools ====================================
