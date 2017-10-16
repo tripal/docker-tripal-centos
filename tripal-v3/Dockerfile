@@ -109,8 +109,14 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 RUN chown -R apache:apache /var/www/html/sites/default/files
 
 
+##=== Replace install tripal with tripal branch 7.x-3.x
+RUN cd /var/www/html/sites/all/modules && \
+    rm -rf tripal && \
+    git clone https://github.com/tripal/tripal.git
+
+
 ##=== Install some linux tools ====================================
-RUN sudo yum install vim cronie htop iotop -y
+RUN sudo yum install vim cronie htop iotop sendmail -y
 ##=================================================================
 
 ##==== Build two elasticsearch clusters, each has two nodes =======
