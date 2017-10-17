@@ -1,33 +1,3 @@
-## `docker-tripal-v3` image
-
-The `docker-tripal-v3` image has Tripal v3 installed on centos system. It
-also runs an Elasticsearch cluster. The chado v1.3 has been installed and
-site preparation step executed. To run a Tripal instance, you just need
-to run the following command:
-
-```
-docker run -it --rm -p 8080:80 mingchen0919/docker-tripal-v3 /bin/bash
-```
-
-This command will launch an interactive docker container with apache, postgres
-and an Elasticsearch cluster running. With this docker image, you can easily 
-set up a tripal 3 site for testing or tripal module development in a couple
-of minutes. Go to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and login
-to the tripal site as an admin user.
-
-## Mount a local directory for custom modules
-
-If you mount a local directory to the custom module directory in your docker container,
-you will be able to edit files on your local machine. And any changes will be reflected
-on your container. A big advantage is that you can use your local editor (for instance, phpstorm) 
-to open and edit files.
-
-```
-docker run -it -p 8080:80 \
-  -v /Users/mingchen/google_drive/projects/docker-volume-tripal-modules/tripal_Elasticsearch:/var/www/html/sites/all/modules/tripal_Elasticsearch \
-  mingchen0919/docker-tripal-v3 /bin/bash
-```
-
 ## Account names and passwords
 
 * Tripal site admin username: admin
