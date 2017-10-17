@@ -84,6 +84,8 @@ RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > 
 ## instruction in a Dockerfile builds a layer (running a container), when the execution of
 ## of instruction finish, the intermediate container will be removed. Therefore all the
 ## connections will lose. So you have to run any dependent servers within the same layer.
+##
+## at the end, we replace the tripal module with the most up to date code from github.
 ##=========================================
 RUN sed -i -e 's/Defaults    requiretty.*/ #Defaults    requiretty/g' /etc/sudoers
 ADD apache/httpd.conf /etc/httpd/conf/httpd.conf
@@ -105,14 +107,15 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
     drush --include=. tripal-generic-install && \
     drush en -y devel admin_menu && \
-    drush dis -y toolbar
+    drush dis -y toolbar && \
+    cd /var/www/html/sites/all/modules && \
+        rm -rf tripal && \
+        git clone https://github.com/tripal/tripal.git && \
+    drush updatedb -y
+
 RUN chown -R apache:apache /var/www/html/sites/default/files
 
 
-##=== Replace install tripal with tripal branch 7.x-3.x
-RUN cd /var/www/html/sites/all/modules && \
-    rm -rf tripal && \
-    git clone https://github.com/tripal/tripal.git
 
 
 ##=== Install some linux tools ====================================
