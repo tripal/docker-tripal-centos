@@ -128,6 +128,11 @@ RUN sh /add-elasticsearch-instance.sh my-cluster node-01 9201 2 && \
     sh /add-elasticsearch-instance.sh my-cluster node-02 9202 2
 ##========================================
 
+ADD drupal-debug.txt /tmp/drupal-debug.txt
+RUN chmod +w /var/www/html/sites/default/settings.php && \
+    cat /tmp/drupal-debug.txt >> /var/www/html/sites/default/settings.php && \
+    chmod -w /var/www/html/sites/default/settings.php
+
 EXPOSE 5432
 
 ADD entrypoint.sh /entrypoint.sh

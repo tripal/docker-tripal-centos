@@ -19,8 +19,8 @@ echo "/user/sbin/httpd"
 
 
 ## start a cluster with two nodes
-/etc/init.d/elasticsearch_node-01 start && sleep 3 # port=9201
-/etc/init.d/elasticsearch_node-02 start && sleep 3 # port=9202
+#/etc/init.d/elasticsearch_node-01 start && sleep 3 # port=9201
+#/etc/init.d/elasticsearch_node-02 start && sleep 3 # port=9202
 
 ## 
 sh -c "$@"
