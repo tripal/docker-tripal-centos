@@ -22,5 +22,8 @@ echo "/user/sbin/httpd"
 /etc/init.d/elasticsearch_node-01 start && sleep 3 # port=9201
 /etc/init.d/elasticsearch_node-02 start && sleep 3 # port=9202
 
-## 
-sh -c "$@"
+##
+# sh -c "$@"
+## start apache
+rm -f /usr/local/apache2/logs/httpd.pid
+/usr/sbin/httpd -DFOREGROUND
