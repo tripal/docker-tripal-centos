@@ -70,7 +70,7 @@ RUN pg_ctl start -D /var/lib/pgsql/data/ && sleep 5 && \
 
 ##========= Drush =========================
 USER root
-RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > drush && \
+RUN php -r "readfile('https://github.com/drush-ops/drush/releases/download/8.1.16/drush.phar');" > drush && \
     chmod +x drush && \
     mv drush /usr/local/bin && \
     yes | drush init
