@@ -107,11 +107,14 @@ RUN rm -rf /var/lib/pgsql/data/postmaster.pid && \
 	sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
     drush --include=. tripal-generic-install && \
     drush en -y devel admin_menu && \
-    drush dis -y toolbar && \
-    cd /var/www/html/sites/all/modules && \
-        rm -rf tripal && \
-        git clone https://github.com/tripal/tripal.git && \
-    drush updatedb -y
+    drush dis -y toolbar
+#--- replace installed tripal with up-to-date tripal from github----
+#    rm -rf /var/lib/pgsql/data/postmaster.pid && \
+#    sudo -u postgres pg_ctl start -D /var/lib/pgsql/data/ && sleep 30 && \
+#    cd /var/www/html/sites/all/modules && \
+#        rm -rf tripal && \
+#        git clone https://github.com/tripal/tripal.git && \
+#    drush updatedb -y
 
 RUN chown -R apache:apache /var/www/html/sites/default/files
 
