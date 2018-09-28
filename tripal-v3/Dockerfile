@@ -96,7 +96,7 @@ RUN git clone https://github.com/tripal/tripal_install.git && \
 RUN sed -i 's/.*Name of the site.*/\$site_name = "Tripal V3";/g' tripal_install.drush.inc && \
     sed -i 's/.*Admin email for the site.*/\$site_email = "admin@gmail.com";/g' tripal_install.drush.inc && \
     sed -i 's/.*Name for your admin user on the site.*/\$username = "admin";/g' tripal_install.drush.inc && \
-    sed -i 's/.*Password for the admin user.*/\$user_password = "P@55w0rd";/g' tripal_install.drush.inc && \
+    sed -i 's/.*Password for the admin user.*/\$user_password = "admin";/g' tripal_install.drush.inc && \
     sed -i 's/.*site_settings.*Is this information correct.*/\$site_settings = TRUE;/g' tripal_install.drush.inc && \
     sed -i 's/.*database name.*/\$database = "tripal_db";/g' tripal_install.drush.inc && \
     sed -i 's/.*postgres username.*/\$postgres_username = "tripal";/g' tripal_install.drush.inc && \
