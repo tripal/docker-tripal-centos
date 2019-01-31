@@ -1,3 +1,8 @@
+# Deprecated
+
+This repository is deprecated!  Please use the [Statonlab Docker Containers repository](https://github.com/statonlab/docker-containers) instead.
+
+
 # Tripal docker images
 
 This repository builds docker images for Tripal v2 and Tripal v3 installed upon Drupal 7.56 with PostGreSQL database.
